@@ -1,0 +1,29 @@
+body {
+	text-align: center;
+}
+h1{
+	margin-bottom: 0;
+	font-size: 32px;
+}
+#surveyForm{
+	text-align: left;
+	padding: 10px;
+    margin-bottom: 50px;
+}
+input,select,button{
+	font-size: 16px;
+}
+h2{
+	font-size: 24px;
+	margin: 16px 0 0 4px;
+}
+input[type="text"]{
+	width: 240px;
+	margin-left: 4px;
+}
+hr {
+	margin: 24px 0;
+}
+#sendBtn {
+    width: 80%;
+}

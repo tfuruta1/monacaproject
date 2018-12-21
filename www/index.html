@@ -1,0 +1,85 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta http-equiv="Content-Security-Policy" content="default-src * data: gap: content: https://ssl.gstatic.com; style-src * 'unsafe-inline'; script-src * 'unsafe-inline' 'unsafe-eval'">
+    <script src="components/loader.js"></script>
+    <link rel="stylesheet" href="components/loader.css">
+    <link rel="stylesheet" href="css/style.css">
+    <script>
+      // ニフクラ Mobile Backendの接続準備
+      var ncmb = new NCMB("2b554699e3e218d94cefbb9342ea7b7465ec79b3e1af2f59fbe00c04f3ac6e76","0a82e730665bc4bbd72a92de71127b98b690b6225b6ae7c14c127704707b79ac");
+
+      /***** STEP(1) データの登録 *****/
+      //クラスの生成
+      var SurveyData = ncmb.DataStore("SurveyData");
+
+      //送信ボタン押下時の処理
+      function send(){
+        //データ登録
+        new SurveyData()
+          .set("name", document.getElementById("name").value)
+          .set("gender", document.getElementById("gender").value)
+          .set("satisfaction", document.getElementById("satisfaction").value)
+          .save()
+          .then(function(){
+            alert("登録が完了しました");
+            fetch();
+          })
+          .catch(function(err){
+            alert("登録に失敗しました");
+          });
+          
+      }
+
+
+      /***** STEP(1) ここまで *****/
+
+      // データの検索
+      function fetch() {
+          // 自分の回答（満足度）
+          var answer = document.getElementById("satisfaction").value;
+          
+          /***** STEP(2) データの検索 *****/
+          SurveyData
+            .equalTo("satisfaction", answer)
+            .fetchAll()
+            .then(function(result){
+              console.log(JSON.stringify(result));
+              var message = (result.length -1) + "人が同じ回答をしました";
+              document.getElementById("message").innerHTML = message;
+            })
+            .catch(function(err){
+              alert(JSON.stringify(err));
+            });
+
+
+          /***** STEP(2) ここまで *****/
+          
+      }
+    </script>
+</head>
+<body>
+	<h1>アンケート</h1>	
+	<div id="surveyForm">
+		<h2>お名前</h2>
+		<ons-input type="text" id="name" modifier="underbar"></ons-input>
+		<h2>性別</h2>
+		<select id="gender">
+			<option value="man">男性</option>
+			<option value="woman">女性</option>
+		</select>
+		<h2>満足度</h2>
+		<select id="satisfaction">
+			<option value="1">とても良い</option>
+			<option value="2">良い</option>
+			<option value="3">普通</option>
+			<option value="4">悪い</option>
+			<option value="5">とても悪い</option>
+		</select>
+	</div>
+	<ons-button id="sendBtn" onclick="send()">送信</ons-button>
+  <div id="message"></div>
+</body>
+</html>
